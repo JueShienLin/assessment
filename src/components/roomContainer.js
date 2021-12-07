@@ -8,12 +8,45 @@ const RoomContainer = ({ rooms }) => {
   const [disabled, setDisabled] = useState(true);
   const [isChecked, setIsChecked] = useState([]);
   const [list, setList] = useState(rooms);
+
+  const handleAdult = (id, value) => {
+    const adultCount = [...list].map((x) => {
+      if (x.id === id) {
+        return { ...x, adults: value };
+      }
+      return x;
+    });
+    setList(adultCount);
+  };
+
+  const handleChild = (id, value) => {
+    const childCount = [...list].map((x) => {
+      if (x.id === id) {
+        return { ...x, children: value };
+      }
+      return x;
+    });
+    setList(childCount);
+  };
+
   const handleOnChange =
     (id) =>
     ({ target }) => {
       const temp = [...list].map((x) => {
-        if (x.id === id) {
-          return { ...x, available: +target.checked };
+        if (x.id === id && target.checked) {
+          return { ...x, available: 1 };
+        }
+        if (x.id === id && !target.checked) {
+          const a = rooms.find((y) => y.id === id);
+          return { ...a, available: 0 };
+        }
+
+        if (x.id < id && target.checked) {
+          return { ...x, available: 1 };
+        }
+        if (x.id > id && !target.checked) {
+          const a = rooms.find((y) => y.id === x.id);
+          return { ...a, available: 0 };
         }
         return x;
       });
@@ -23,11 +56,17 @@ const RoomContainer = ({ rooms }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const room = { adult, children, available };
-    fetch("http://localhost:8000/", {
-      method: "PUT",
-      body: JSON.stringify(room),
-    });
+    [...list]
+      .filter((x) => x.available)
+      .map((rooms) => {
+        fetch("http://localhost:8000/roomList/" + rooms.id, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(rooms),
+        });
+      });
   };
   return (
     <div className="container bg-white p-4">
@@ -51,7 +90,8 @@ const RoomContainer = ({ rooms }) => {
                 <FloatingLabel controlId="floatingSelect" label="Adults">
                   <Form.Select
                     disabled={!roomList.available}
-                    onChange={(e) => setAdult(e.target.value)}
+                    onChange={(e) => handleAdult(roomList.id, e.target.value)}
+                    value={roomList.adults}
                   >
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -63,7 +103,8 @@ const RoomContainer = ({ rooms }) => {
                 <FloatingLabel controlId="floatingSelect" label="Children">
                   <Form.Select
                     disabled={!roomList.available}
-                    onChange={(e) => setChildren(e.target.value)}
+                    onChange={(e) => handleChild(roomList.id, e.target.value)}
+                    value={roomList.children}
                   >
                     <option value="0">0</option>
                     <option value="1">1</option>
