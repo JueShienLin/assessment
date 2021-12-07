@@ -1,0 +1,32 @@
+{
+  "roomList": [
+    {
+      "roomNo": "Room 1",
+      "adults": "1",
+      "children": "0",
+      "available": 1,
+      "id": 1
+    },
+    {
+      "roomNo": "Room 2",
+      "adults": "1",
+      "children": "0",
+      "available": 0,
+      "id": 2
+    },
+    {
+      "roomNo": "Room 3",
+      "adults": "1",
+      "children": "0",
+      "available": 0,
+      "id": 3
+    },
+    {
+      "roomNo": "Room 4",
+      "adults": "1",
+      "children": "0",
+      "available": 0,
+      "id": 4
+    }
+  ]
+}
