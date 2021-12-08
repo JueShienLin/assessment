@@ -2,11 +2,6 @@ import React, { useState } from "react";
 import { Form, Button, FloatingLabel } from "react-bootstrap";
 
 const RoomContainer = ({ rooms }) => {
-  const [adult, setAdult] = useState("1");
-  const [children, setChildren] = useState("");
-  const [available, setAvailable] = useState("0");
-  const [disabled, setDisabled] = useState(true);
-  const [isChecked, setIsChecked] = useState([]);
   const [list, setList] = useState(rooms);
 
   const handleAdult = (id, value) => {
@@ -79,6 +74,7 @@ const RoomContainer = ({ rooms }) => {
           >
             <Form.Check
               type="checkbox"
+              value={roomList.available}
               checked={roomList.available}
               label={roomList.roomNo}
               className="mx-3 px-2"
